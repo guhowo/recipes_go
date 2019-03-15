@@ -9,7 +9,7 @@ import (
 	"syscall"
 )
 
-func consume(stop <-chan bool, index int)  {
+func consume(stop <-chan bool, index int) {
 	for {
 		select {
 		case <-stop:
