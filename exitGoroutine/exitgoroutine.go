@@ -30,6 +30,8 @@ func waitForSignals() {
 	<-sigs
 }
 
+
+//从主协程通知各个子协程关闭。主协程等全部关闭后，优雅退出
 func main() {
 	stop := make(chan bool)
 	var wg sync.WaitGroup
