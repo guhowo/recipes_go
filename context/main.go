@@ -39,16 +39,16 @@ func reqURL(ctx context.Context, wg *sync.WaitGroup) {
 			fmt.Println("stop getting url: ", url)
 			return
 		default:
-		r, err := http.Get(url)
-		if err == nil && r.StatusCode == http.StatusOK {
-			body, _ := ioutil.ReadAll(r.Body)
-			subctx := context.WithValue(ctx, "resp", fmt.Sprintf("%s%x", url, md5.Sum(body)))
-			wg.Add(1)
-			go showResp(subctx, wg)
+			r, err := http.Get(url)
+			if err == nil && r.StatusCode == http.StatusOK {
+				body, _ := ioutil.ReadAll(r.Body)
+				subctx := context.WithValue(ctx, "resp", fmt.Sprintf("%s%x", url, md5.Sum(body)))
+				wg.Add(1)
+				go showResp(subctx, wg)
+			}
+			r.Body.Close()
+			time.Sleep(time.Second*1)
 		}
-		r.Body.Close()
-		time.Sleep(time.Second*1)
-	}
 	}
 }
 
