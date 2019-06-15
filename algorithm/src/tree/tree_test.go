@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestNode_Traversal1(t *testing.T) {
+func TestNode_Traverse1(t *testing.T) {
 
 	a := []int{10, 5, 14, 1, 2, 12, 15, 3}
 
@@ -13,7 +13,7 @@ func TestNode_Traversal1(t *testing.T) {
 		root = Insert(v, root)
 	}
 
-	Traversal1(root)
+	Traverse1(root)
 
 	for _, unit := range []struct{
 		r *Node
@@ -22,8 +22,16 @@ func TestNode_Traversal1(t *testing.T) {
 		{root,
 		5,
 		},
+		{root,
+			5,
+		},
 	} {
+
 		if actually := Depth(unit.r); actually != unit.excepted {
+			t.Errorf("Depth: [%v], actually: [%v]", unit, actually)
+		}
+
+		if actually := Depth1(unit.r); actually != unit.excepted {
 			t.Errorf("Depth: [%v], actually: [%v]", unit, actually)
 		}
 	}

@@ -1,6 +1,8 @@
 package tree
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Node struct {
 	data  int
@@ -43,19 +45,22 @@ func Insert(e int, root *Node) *Node {
 	return root
 }
 
-
-func Traversal1(root *Node) {
+//递归版本
+func Traverse1(root *Node) {
 	if root == nil {
 		return
 	}
 
 	left := root.left
 	right := root.right
-	Traversal1(left)
+	Traverse1(left)
 	fmt.Println(root.data)
-	Traversal1(right)
+	Traverse1(right)
 }
 
+
+
+//递归版本
 func Depth(root *Node) int {
 	if root == nil {
 		return 0
@@ -68,4 +73,34 @@ func Depth(root *Node) int {
 	} else {
 		return rDepth + 1
 	}
+}
+
+//非递归版本
+func Depth1(root *Node) int {
+	if root == nil {
+		return 0
+	}
+
+	slice := make([]*Node, 0)
+	slice = append(slice, root)
+
+	var dpt int
+
+	for len(slice) != 0 {
+		dpt++
+		cnt := 0
+		curLevelTotal := len(slice)
+		for cnt < curLevelTotal {
+			cnt++
+			end := slice[len(slice) - 1]
+			slice =slice[:len(slice) - 1]
+			if end.right != nil {
+				slice = append(slice, end.right)
+			}
+			if end.left != nil {
+				slice = append(slice, end.left)
+			}
+		}
+	}
+	return dpt
 }
