@@ -37,3 +37,27 @@ func TestNode_Traverse1(t *testing.T) {
 	}
 
 }
+
+func TestNode_Traverse2(t *testing.T) {
+	a := []int{10, 5, 14, 1, 2, 12, 15, 3}
+
+	var root *Node
+	for _, v := range a {
+		root = Insert(v, root)
+	}
+
+	Traverse2(root)
+}
+
+
+
+func TestNode_Traverse3(t *testing.T) {
+	a := []int{10, 5, 14, 1, 2, 12, 15, 3}
+
+	var root *Node
+	for _, v := range a {
+		root = Insert(v, root)
+	}
+
+	Traverse3(root)
+}

@@ -58,7 +58,56 @@ func Traverse1(root *Node) {
 	Traverse1(right)
 }
 
+//非递归版本先序遍历
+func Traverse2(root *Node) {
+	if root == nil {
+		return
+	}
 
+	slice := make([]*Node, 0)
+	p := root
+
+	for p != nil || len(slice) != 0 {
+		for p != nil {
+			fmt.Println(p.data)
+			slice = append(slice, p)
+			p = p.left
+		}
+		if len(slice) != 0 {
+			p = slice[len(slice)-1]
+			slice = slice[:len(slice) - 1]
+			p = p.right
+
+		}
+	}
+
+}
+
+
+//非递归版本中序遍历
+func Traverse3(root *Node) {
+	if root == nil {
+		return
+	}
+
+	slice := make([]*Node, 0)
+	p := root
+
+	for p != nil || len(slice) != 0 {
+		for p != nil {
+			slice = append(slice, p)
+			p = p.left
+		}
+		if len(slice) != 0 {
+			p = slice[len(slice)-1]
+			slice = slice[:len(slice) - 1]
+			fmt.Println(p.data)
+			p = p.right
+
+		}
+	}
+
+}
 
 //递归版本
 func Depth(root *Node) int {
