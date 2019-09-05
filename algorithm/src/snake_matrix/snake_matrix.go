@@ -25,14 +25,9 @@ func New(m, n int) {
 	matrix[0][0] = 1
 
 
-	for i:= 1; i <= m*n; i++ {
-		fmt.Println("x = ", point.x, "y = ", point.y, "up = ", point.up)
+	for i:= 1; i < m*n; i++ {
 		x, y := move(point, m, n)
 		matrix[x][y] = i+1
-		if point.x == m - 1 && point.y == n -1 {
-			fmt.Println("x = ", point.x, "y = ", point.y, "up = ", point.up)
-			break
-		}
 	}
 
 	fmt.Println("matrix = ", matrix)
