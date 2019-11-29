@@ -39,6 +39,6 @@ func TestMinHeapInsert(t *testing.T) {
 
 func TestMedian(t *testing.T) {
 	a := []float64{0, 1, 2, 3, 4, 5, 6}
-	m := Median(a, 1, 7)
+	m := Median(a, 1, 6)
 	fmt.Println(m)
 }

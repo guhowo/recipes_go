@@ -43,41 +43,52 @@ func MaxHeapify(a []float64, start, end int) {
 }
 
 // 大顶堆的插入
-func MaxHeapInsert(a []float64, start, end int, value float64) []float64 {
-	a = append(a, value)
+func MaxHeapInsert(a []float64, start, end int, value float64) (n []float64) {
+	if start > end {
+		return append(a, value)
+	}
+
+	n = append(a, value)
 	end++
 	parent := end / 2
 	son := end
 	for parent >= start {
-		if a[son] > a[parent] {
-			a[son], a[parent] = a[parent], a[son]
+		if n[son] > n[parent] {
+			n[son], n[parent] = n[parent], n[son]
 			son = parent
 			parent = parent / 2
 		} else {
-			return a
+			return n
 		}
 	}
-	return a
+	return n
 }
 
 // 小顶堆的插入
-func MinHeapInsert(a []float64, start, end int, value float64) []float64 {
-	a = append(a, value)
+func MinHeapInsert(a []float64, start, end int, value float64) (n []float64) {
+	if start > end {
+		return append(a, value)
+	}
+	n = append(a, value)
 	end++
 	parent := end / 2
 	son := end
 	for parent >= start {
-		if a[son] < a[parent] {
+		if n[son] < n[parent] {
 			son = parent
 			parent = parent / 2
 		} else {
-			return a
+			return n
 		}
 	}
-	return a
+	return n
 }
 
 func MaxHeapDelete(a []float64, start, end int) []float64 {
+	if start > end {
+		return a
+	}
+
 	a[start], a[end] = a[end], a[start]
 	end--
 	parent := start
@@ -98,6 +109,10 @@ func MaxHeapDelete(a []float64, start, end int) []float64 {
 }
 
 func MinHeapDelete(a []float64, start, end int) []float64 {
+	if start > end {
+		return a
+	}
+
 	a[start], a[end] = a[end], a[start]
 	end--
 	parent := start
@@ -117,69 +132,6 @@ func MinHeapDelete(a []float64, start, end int) []float64 {
 	return a[:end+1]
 }
 
-/*
- * 求数组的中位数
- * 左边是大堆，右边是小堆。
- * 如果插入的数比当前的中位数大，那么插入右边（小堆），反之插入左边（大堆）
- * 每次插入后，两个堆大小不能超过1，否则把多的那个堆顶放到另一个堆
- */
-//func Median(a []float64, start, end int) (m float64) {
-//	if start == end {
-//		return a[start]
-//	}
-//
-//	m = float64(0)
-//	// initialize max heap and min heap
-//	maxHeap := make([]float64, 0)
-//	minHeap := make([]float64, 0)
-//	maxHeapLen:=0
-//	minHeapLen:=0
-//	// top of heap to move from bigger heap to the smaller one
-//	var move float64
-//	for i, value := range a[start:end] {
-//		fmt.Println("i = ", i, ", value = ", value)
-//		// flag of even or odd
-//		// put into min heap when value is bigger then the current median
-//		if value > m {
-//			minHeap = MinHeapInsert(minHeap, 0, len(minHeap)-1, value)
-//		} else if value < m {
-//			// put into max heap when value is less then the current median
-//			maxHeap = MaxHeapInsert(maxHeap, 0, len(maxHeap)-1, value)
-//		} else {
-//			// put into the smaller heap if equal
-//			if len(maxHeap) > len(minHeap) {
-//				minHeap = MinHeapInsert(minHeap, 0, len(minHeap)-1, value)
-//			} else {
-//				maxHeap = MaxHeapInsert(maxHeap, 0, len(maxHeap)-1, value)
-//			}
-//		}
-//		fmt.Println("maxHeap = ", maxHeap)
-//		fmt.Println("minHeap = ", minHeap)
-//		// adjust two heaps
-//		if len(maxHeap)-len(minHeap) >= 2 {
-//			move = maxHeap[0]
-//			maxHeap = MaxHeapDelete(maxHeap, 0, len(maxHeap)-1)
-//			maxHeap = maxHeap[]
-//			minHeap = MinHeapInsert(minHeap, 0, len(minHeap)-1, move)
-//			m = (minHeap[0] + maxHeap[0]) / 2
-//		} else if len(minHeap)-len(maxHeap) >= 2 {
-//			move = minHeap[0]
-//			minHeap = MinHeapDelete(minHeap, 0, len(minHeap)-1)
-//			maxHeap = MaxHeapInsert(maxHeap, 0, len(maxHeap)-1, move)
-//			m = (minHeap[0] + maxHeap[0]) / 2
-//		} else if len(maxHeap)-len(minHeap) == 1 {
-//			m = maxHeap[0]
-//		} else if len(minHeap)-len(maxHeap) == 1 {
-//			m = minHeap[0]
-//		} else {
-//			m = (minHeap[0] + maxHeap[0]) / 2
-//		}
-//		fmt.Println("maxHeap = ", maxHeap)
-//		fmt.Println("minHeap = ", minHeap)
-//		//fmt.Println(i+1, " st = ", m)
-//	}
-//	return m
-//}
 func Median(a []float64, start, end int) (m float64) {
 	if start == end {
 		return a[start]
@@ -187,10 +139,10 @@ func Median(a []float64, start, end int) (m float64) {
 
 	m = float64(0)
 	// initialize max heap and min heap
-	maxHeap := make([]float64, 0)
-	minHeap := make([]float64, 0)
-	maxHeapLen := 0
-	minHeapLen := 0
+	maxHeap := make([]float64, 1)
+	minHeap := make([]float64, 1)
+	maxHeapLen := 1
+	minHeapLen := 1
 	// top of heap to move from bigger heap to the smaller one
 	var move float64
 	for i, value := range a[start:end] {
@@ -198,47 +150,45 @@ func Median(a []float64, start, end int) (m float64) {
 		// flag of even or odd
 		// put into min heap when value is bigger then the current median
 		if value > m {
-			minHeap = MinHeapInsert(minHeap, 1, minHeapLen, value)
+			minHeap = MinHeapInsert(minHeap, 1, minHeapLen-1, value)
 			minHeapLen++
 		} else if value < m {
 			// put into max heap when value is less then the current median
-			maxHeap = MaxHeapInsert(maxHeap, 1, maxHeapLen, value)
+			maxHeap = MaxHeapInsert(maxHeap, 1, maxHeapLen-1, value)
 			maxHeapLen++
 		} else {
 			// put into the smaller heap if equal
 			if maxHeapLen > minHeapLen {
-				minHeap = MinHeapInsert(minHeap, 1, minHeapLen, value)
+				minHeap = MinHeapInsert(minHeap, 1, minHeapLen-1, value)
 				minHeapLen++
 			} else {
-				maxHeap = MaxHeapInsert(maxHeap, 1, maxHeapLen, value)
+				maxHeap = MaxHeapInsert(maxHeap, 1, maxHeapLen-1, value)
 				maxHeapLen++
 			}
 		}
-		fmt.Println("maxHeap = ", maxHeap)
-		fmt.Println("minHeap = ", minHeap)
+
 		// adjust two heaps
 		if maxHeapLen-minHeapLen >= 2 {
 			move = maxHeap[0]
-			maxHeap = MaxHeapDelete(maxHeap, 1, maxHeapLen)
+			maxHeap = MaxHeapDelete(maxHeap, 1, maxHeapLen-1)
 			maxHeapLen--
-			minHeap = MinHeapInsert(minHeap, 1, minHeapLen, move)
+			minHeap = MinHeapInsert(minHeap, 1, minHeapLen-1, move)
 			minHeapLen++
-			m = (minHeap[0] + maxHeap[0]) / 2
+			m = (minHeap[1] + maxHeap[1]) / 2
 		} else if minHeapLen-maxHeapLen >= 2 {
-			move = minHeap[0]
-			minHeap = MinHeapDelete(minHeap, 0, minHeapLen-1)
-			maxHeap = MaxHeapInsert(maxHeap, 0, maxHeapLen-1, move)
-			m = (minHeap[0] + maxHeap[0]) / 2
+			move = minHeap[1]
+			minHeap = MinHeapDelete(minHeap, 1, minHeapLen-1)
+			minHeapLen--
+			maxHeap = MaxHeapInsert(maxHeap, 1, maxHeapLen-1, move)
+			maxHeapLen++
+			m = (minHeap[1] + maxHeap[1]) / 2
 		} else if maxHeapLen-minHeapLen == 1 {
-			m = maxHeap[0]
+			m = maxHeap[1]
 		} else if minHeapLen-maxHeapLen == 1 {
-			m = minHeap[0]
+			m = minHeap[1]
 		} else {
-			m = (minHeap[0] + maxHeap[0]) / 2
+			m = (minHeap[1] + maxHeap[1]) / 2
 		}
-		fmt.Println("maxHeap = ", maxHeap)
-		fmt.Println("minHeap = ", minHeap)
-		//fmt.Println(i+1, " st = ", m)
 	}
 	return m
 }
