@@ -1,9 +1,4 @@
-# recipes_go
-go practice
-http
-sort            sort包使用
-RateLimit       常规限流
-tokenbucket     令牌桶实现限速
-limiter         利用go rate包实现限速
-pool       	通用连接池
+### recipes_go
+####主要包含算法，即algorithm，还有一些goroutine、优雅关闭等go特性的联系
+
 
