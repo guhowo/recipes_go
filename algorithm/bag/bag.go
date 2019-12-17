@@ -1,5 +1,7 @@
 package bag
 
+//背包问题：回溯法
+
 var maxW int //当前求得的最大的总重量
 var n int    //items的个数
 var result []int
