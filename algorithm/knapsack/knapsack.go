@@ -2,7 +2,7 @@ package knapsack
 
 import "fmt"
 
-//背包问题：动态规划
+//背包问题：动态规划，不涉及商品的价值。
 
 type IBag interface {
 	Solve(items []int, n, w int) int
@@ -26,12 +26,14 @@ func (b *Bag) Solve(items []int, n, w int) int {
 
 	//开始状态转移，从第一行开始
 	for i := 1; i < n; i++ {
+		//不选第i个
 		for j := 0; j <= w; j++ {
 			if states[i-1][j] {
 				states[i][j] = true
 			}
 		}
-		for j := w - items[i]; j >= 0; j-- {
+		//选第i个
+		for j := 0; j <= w-items[i]; j++ {
 			if states[i-1][j] {
 				states[i][j+items[i]] = true
 			}
