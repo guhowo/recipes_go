@@ -9,6 +9,16 @@ func Test_LevenshteinDistance(t *testing.T) {
 		Expect int
 	}{
 		{
+			"a",
+			"ab",
+			1,
+		},
+		{
+			"horse",
+			"ros",
+			3,
+		},
+		{
 			"pneumonoultramicroscopicsilicovolcanoconiosis",
 			"ultramicroscopically",
 			27,
