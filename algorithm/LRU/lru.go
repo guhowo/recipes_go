@@ -36,7 +36,8 @@ func (this *LRUCache) Get(key int) int {
 		return -1
 	}
 	//如果存在调整节点到头，再返回结果
-	this.MoveNodeToHead(node)
+	this.Remove(node)
+	this.SetHead(node)
 
 	return node.Value
 
@@ -70,11 +71,6 @@ func (this *LRUCache) SetHead(node *Node) {
 	this.Head.Next = node
 	node.Pre = this.Head
 
-}
-
-func (this *LRUCache) MoveNodeToHead(node *Node) {
-	this.Remove(node)
-	this.SetHead(node)
 }
 
 /**
