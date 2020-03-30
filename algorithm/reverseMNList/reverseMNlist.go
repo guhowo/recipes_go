@@ -7,7 +7,7 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func ReverseList(head *ListNode, m, n int) *ListNode {
+func reverseBetween(head *ListNode, m int, n int) *ListNode {
 	dummy := &ListNode{
 		Val:  0,
 		Next: head,
@@ -16,21 +16,23 @@ func ReverseList(head *ListNode, m, n int) *ListNode {
 	pre := dummy
 	end := dummy
 
-	for i := 0; i < m && pre.Next != nil; i++ {
+	for i := 1; i < m && pre.Next != nil; i++ {
 		pre = pre.Next
 	}
 	if pre.Next == nil {
 		return head
 	}
 	start := pre.Next
-	end = pre
-	for i := 0; i < m-n; i++ {
+	end = start
+
+	for i := 0; i < n-m; i++ {
 		end = end.Next
 	}
+
 	next := end.Next
 	end.Next = nil
 	pre.Next = reverse(start)
-	end.Next = next
+	start.Next = next
 
 	return dummy.Next
 }
