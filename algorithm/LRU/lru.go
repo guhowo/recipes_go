@@ -45,7 +45,7 @@ func (this *LRUCache) Get(key int) int {
 
 func (this *LRUCache) Put(key int, value int) {
 	node, ok := this.HTable[key]
-	//已存在
+	//已存在，先删除
 	if ok {
 		this.Remove(node)
 		node.Value = value
@@ -57,6 +57,7 @@ func (this *LRUCache) Put(key int, value int) {
 		node = &Node{Value: value, Key: key}
 		this.HTable[key] = node
 	}
+	//同一头部插入
 	this.SetHead(node)
 }
 
