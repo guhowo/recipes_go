@@ -16,6 +16,7 @@ func (m *Merge) MergeSort(start, end int, a []int) {
 	}
 
 	mid := start + (end-start)>>1
+	m.MergeSort(start, mid, a)
 	m.MergeSort(mid+1, end, a)
 	m.merge(start, end, mid, a)
 
