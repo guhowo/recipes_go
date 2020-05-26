@@ -1,15 +1,15 @@
 package main
 
 import (
-	"time"
 	"fmt"
-	"testing"
-	"strconv"
 	"log"
+	"strconv"
+	"testing"
+	"time"
 )
 
 type DemoCloser struct {
-	Name string
+	Name     string
 	activeAt time.Time
 }
 
@@ -25,7 +25,7 @@ func (p *DemoCloser) GetActiveTime() time.Time {
 func TestNewGenericPool(t *testing.T) {
 	_, err := NewGenericPool(0, 10, time.Minute*10, func() (Poolable, error) {
 		time.Sleep(time.Second)
-		return &DemoCloser{ Name: "test", activeAt: time.Now()}, nil
+		return &DemoCloser{Name: "test", activeAt: time.Now()}, nil
 	})
 	if err != nil {
 		t.Error(err)
@@ -38,7 +38,7 @@ func TestGenericPool_Acquire(t *testing.T) {
 		name := strconv.FormatInt(time.Now().Unix(), 10)
 		log.Printf("%s created", name)
 		// TODO: FIXME &DemoCloser{Name: name}后，pool.Acquire陷入死循环
-		return &DemoCloser{Name: name, activeAt:time.Now()}, nil
+		return &DemoCloser{Name: name, activeAt: time.Now()}, nil
 	})
 	if err != nil {
 		t.Error(err)
