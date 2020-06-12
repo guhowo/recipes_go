@@ -1,155 +1,228 @@
 package tree
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type Node struct {
-	data  int
-	right *Node
-	left  *Node
+	Val   int
+	Left  *Node
+	Right *Node
 }
 
-//非递归插入
-func Insert(e int, root *Node) *Node {
-	node := &Node{
-		e,
-		nil,
-		nil,
+var root *Node = nil
+
+func insert(val int) {
+	node := Node{Val: val}
+	if root == nil {
+		root = &node
+		return
 	}
 
-	ptr := root
-	parent := ptr
-	pos := ""
-
-	for ptr != nil {
-		parent = ptr
-		if ptr.data > e {
-			ptr = ptr.left
-			pos = "left"
-		} else if ptr.data < e {
-			ptr = ptr.right
-			pos = "right"
+	p := root
+	for p != nil {
+		if val < p.Val {
+			if p.Left == nil {
+				p.Left = &node
+				return
+			}
+			p = p.Left
+		} else if val > p.Val {
+			if p.Right == nil {
+				p.Right = &node
+				return
+			}
+			p = p.Right
 		} else {
-			return root
+			return
 		}
 	}
 
-	if pos == "left" {
-		parent.left = node
-	} else if pos == "right" {
-		parent.right = node
-	} else {
-		root = node
-	}
-	return root
+	return
 }
 
-//递归版本
-func Traverse1(root *Node) {
-	if root == nil {
-		return
-	}
-
-	left := root.left
-	right := root.right
-	Traverse1(left)
-	fmt.Println(root.data)
-	Traverse1(right)
-}
-
-//非递归版本先序遍历
-func Traverse2(root *Node) {
-	if root == nil {
-		return
-	}
-
-	slice := make([]*Node, 0)
+func find(val int) *Node {
 	p := root
 
-	for p != nil || len(slice) != 0 {
-		for p != nil {
-			fmt.Println(p.data)
-			slice = append(slice, p)
-			p = p.left
-		}
-		if len(slice) != 0 {
-			p = slice[len(slice)-1]
-			slice = slice[:len(slice) - 1]
-			p = p.right
-
+	for p != nil {
+		if p.Val == val {
+			return p
+		} else if p.Val > val {
+			p = p.Left
+		} else {
+			p = p.Right
 		}
 	}
 
+	return nil
 }
 
+func delete(val int) {
+	p := root
+	var pp *Node = nil //要删除节点的parent
 
-//非递归版本中序遍历
-func Traverse3(root *Node) {
+	//先找到要删除的节点和它的parent
+	for p != nil {
+		if val < p.Val {
+			pp = p
+			p = p.Left
+		} else if val > p.Val {
+			pp = p
+			p = p.Right
+		} else {
+			break
+		}
+	}
+
+	//没有找到要删除的节点，退出
+	if p == nil {
+		return
+	}
+
+	//要删除的节点有两个子节点，找到右子树的最小的节点minp（minp肯定没有叶子节点）
+	if p.Left != nil && p.Right != nil {
+		minp := p.Right
+		var minpp *Node = nil //minp的父亲节点
+		for minp != nil {
+			if minp.Left != nil {
+				minpp = minp
+				minp = minp.Left
+			}
+		}
+		p.Val = minp.Val
+		p = minp   //要删除的点解变成了minp
+		pp = minpp //要删除节点的父节点变成了minpp
+	}
+
+	// 找到要删除节点的孩子节点（最多一个，因为两个孩子的情况上一段已经转换成最多一个的情况了）
+	var child *Node = nil
+	if p.Left != nil {
+		child = p.Left
+	} else if p.Right != nil {
+		child = p.Right
+	} else {
+		child = nil
+	}
+
+	//将要删除节点的父节点与要删除节点的子节点链接起来
+	if pp == nil { //要删除的节点是root
+		root = child
+	} else if pp.Left == p {
+		pp.Left = child
+	} else {
+		pp.Right = child
+	}
+}
+
+// 前序遍历
+func preOrder(root *Node) {
+	if root == nil {
+		return
+	}
+	fmt.Println(root.Val)
+	preOrder(root.Left)
+	preOrder(root.Right)
+}
+
+//前序遍历的深度优先实现
+func PreOrder(root *Node) {
 	if root == nil {
 		return
 	}
 
-	slice := make([]*Node, 0)
-	p := root
-
-	for p != nil || len(slice) != 0 {
-		for p != nil {
-			slice = append(slice, p)
-			p = p.left
+	stack := make([]*Node, 0)
+	cur := root
+	for cur != nil || len(stack) != 0 {
+		//左子树入stack
+		for cur != nil {
+			fmt.Println(cur.Val)
+			stack = append(stack, cur) //push
+			cur = cur.Left
 		}
-		if len(slice) != 0 {
-			p = slice[len(slice)-1]
-			slice = slice[:len(slice) - 1]
-			fmt.Println(p.data)
-			p = p.right
-
+		//左子树遍历完毕，遍历右子树
+		if len(stack) != 0 {
+			cur = stack[len(stack)-1]
+			stack = stack[0 : len(stack)-1] //pop
+			cur = cur.Right
 		}
-	}
-
-}
-
-//递归版本
-func Depth(root *Node) int {
-	if root == nil {
-		return 0
-	}
-
-	lDepth := Depth(root.left)
-	rDepth := Depth(root.right)
-	if lDepth > rDepth {
-		return lDepth + 1
-	} else {
-		return rDepth + 1
 	}
 }
 
-//非递归版本
-func Depth1(root *Node) int {
+//中序遍历的深度优先
+func InOrder(root *Node) {
 	if root == nil {
-		return 0
+		return
 	}
 
-	slice := make([]*Node, 0)
-	slice = append(slice, root)
+	stack := make([]*Node, 0)
+	cur := root
+	for cur != nil || len(stack) != 0 {
+		//左子树入stack
+		for cur != nil {
+			stack = append(stack, cur) //push
+			cur = cur.Left
+		}
+		//左子树遍历完毕，遍历右子树
+		if len(stack) != 0 {
+			cur = stack[len(stack)-1]
+			stack = stack[0 : len(stack)-1] //pop
+			fmt.Println(cur.Val)
+			cur = cur.Right
+		}
+	}
+}
 
-	var dpt int
+// 后序遍历
+func PostOrder(root *Node) {
+	if root == nil {
+		return
+	}
 
-	for len(slice) != 0 {
-		dpt++
-		cnt := 0
-		curLevelTotal := len(slice)
-		for cnt < curLevelTotal {
-			cnt++
-			end := slice[len(slice) - 1]
-			slice =slice[:len(slice) - 1]
-			if end.right != nil {
-				slice = append(slice, end.right)
+	stack := make([]*Node, 0)
+	cur := root
+	var pre *Node = nil
+
+	for cur != nil {
+		for cur != nil {
+			stack = append(stack, cur)
+			pre = cur
+			cur = cur.Left
+		}
+
+		if len(stack) != 0 {
+			p := stack[len(stack)-1]
+			if (p.Left == nil && p.Right == nil) || pre == p.Right {
+				fmt.Println(p.Val)
+				stack = stack[0 : len(stack)-1]
+			} else {
+				if p.Right != nil {
+					cur = p.Right
+				}
 			}
-			if end.left != nil {
-				slice = append(slice, end.left)
+
+		}
+	}
+}
+
+//按行遍历
+func bfs(root *Node) {
+	if root == nil {
+		return
+	}
+
+	deque := make([]*Node, 0)
+	deque = append(deque, root)
+
+	for len(deque) != 0 {
+		levelSize := len(deque)
+		for i := 0; i < levelSize; i++ {
+			pop := deque[0]
+			fmt.Println(pop.Val)
+			deque = deque[1:]
+			if pop.Left != nil {
+				deque = append(deque, pop.Left)
+			}
+			if pop.Right != nil {
+				deque = append(deque, pop.Right)
 			}
 		}
 	}
-	return dpt
 }
